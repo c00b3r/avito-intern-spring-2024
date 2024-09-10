@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Advertisment } from "../../interface";
 
 export default function ListAdvertisementsPage() {
@@ -6,15 +6,22 @@ export default function ListAdvertisementsPage() {
   const [page, setPage] = useState(1);
   const [limitOfAdvertisements, setLimitOfAdvertisements] = useState(10);
   const [startElement, setStartElement] = useState(0);
+  const [valueSearchInput, setValueSearchInput] = useState("");
+  const [searchParam, setSearchParam] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const fetchDataOfAdvertisements = async (start: number = 0, limit: number = 10) => {
+  // TODO: сделать поиск нормальным, &q= не работает
+  const fetchDataOfAdvertisements = async (
+    start: number = 0,
+    limit: number = 0,
+    name: string = "",
+  ) => {
     try {
       setLoading(true);
 
       const response = await fetch(
-        `http://localhost:3000/advertisements?_start=${start}&_limit=${limit}`,
+        `http://localhost:3000/advertisements?_start=${start}&_limit=${limit}&name=${name}`,
       );
       if (response.ok) {
         const data: Advertisment[] = await response.json();
@@ -41,10 +48,18 @@ export default function ListAdvertisementsPage() {
     setPage(1);
     setStartElement(0);
   };
+  const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValueSearchInput(e.target.value);
+  };
+  const onClickSearchHandler = () => {
+    setSearchParam(valueSearchInput);
+    setStartElement(0);
+    fetchDataOfAdvertisements(0, limitOfAdvertisements, valueSearchInput);
+  };
 
   useEffect(() => {
-    fetchDataOfAdvertisements(startElement, limitOfAdvertisements);
-  }, [page, startElement, limitOfAdvertisements]);
+    fetchDataOfAdvertisements(startElement, limitOfAdvertisements, searchParam);
+  }, [page, startElement, limitOfAdvertisements, searchParam]);
 
   if (loading) {
     return <p>Загрузка данных...</p>;
@@ -56,6 +71,16 @@ export default function ListAdvertisementsPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
+      <div className="search-container" style={{ display: "flex", gap: "5px" }}>
+        <input
+          type="text"
+          placeholder="Поиск по объявлениям"
+          value={valueSearchInput}
+          onChange={(e) => onChangeSearchInput(e)}
+        />
+        <button onClick={onClickSearchHandler}>Поиск</button>
+      </div>
+
       {dataOfAdvertisements.map((advertisementItem) => (
         <div key={advertisementItem.id}>{advertisementItem.name}</div>
       ))}
