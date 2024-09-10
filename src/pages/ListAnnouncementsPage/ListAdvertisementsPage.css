@@ -1,0 +1,16 @@
+.advertisements-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  width: 1250px;
+  margin: 0 auto;
+}
+
+.search-container input {
+  outline-color: rgb(96, 127, 194);
+  border-radius: 8px;
+  border: 2px solid gray;
+  box-shadow: none;
+}

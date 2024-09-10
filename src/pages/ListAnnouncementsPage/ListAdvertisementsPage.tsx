@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Advertisment } from "../../interface";
+import { Button, Grid2 } from "@mui/material";
+import "./ListAdvertisementsPage.css";
+import ItemCard from "../../components/ItemCard/ItemCard";
 
 export default function ListAdvertisementsPage() {
   const [dataOfAdvertisements, setDataOfAdvertisements] = useState<Advertisment[]>([]);
@@ -70,20 +73,31 @@ export default function ListAdvertisementsPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div className="search-container" style={{ display: "flex", gap: "5px" }}>
+    <div className="advertisements-container">
+      <div className="search-container" style={{ display: "flex", gap: "5px", alignSelf: "end" }}>
+        <Button variant="contained" size="medium">
+          Создать объявление
+        </Button>
         <input
           type="text"
           placeholder="Поиск по объявлениям"
           value={valueSearchInput}
           onChange={(e) => onChangeSearchInput(e)}
         />
-        <button onClick={onClickSearchHandler}>Поиск</button>
+        <Button onClick={onClickSearchHandler}>Поиск </Button>
       </div>
-
-      {dataOfAdvertisements.map((advertisementItem) => (
-        <div key={advertisementItem.id}>{advertisementItem.name}</div>
-      ))}
+      <Grid2
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columnSpacing={{ xs: 3, sm: 3, md: 3 }}
+        margin={"10px"}
+      >
+        {dataOfAdvertisements.map((advertisementItem) => (
+          <Grid2 key={advertisementItem.id} size={{ xs: 1, sm: 1, md: 4 }}>
+            <ItemCard {...advertisementItem} />
+          </Grid2>
+        ))}
+      </Grid2>
 
       <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
         <button disabled={page === 1} onClick={onClickButtonBack}>

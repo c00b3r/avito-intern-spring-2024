@@ -11,20 +11,22 @@ const route = createBrowserRouter([
   {
     path: "/",
     element: <MainPage />,
-  },
-  {
-    path: "/advertisements",
-    element: <ListAdvertisementsPage />,
     children: [
       {
-        path: "advertisements/:id",
-        element: <AdvertisementPage />,
+        path: "/advertisements",
+        element: <ListAdvertisementsPage />,
+        children: [
+          {
+            path: "advertisements/:id",
+            element: <AdvertisementPage />,
+          },
+        ],
+      },
+      {
+        path: "/orders",
+        element: <OrdersPage />,
       },
     ],
-  },
-  {
-    path: "/orders",
-    element: <OrdersPage />,
   },
 ]);
 
