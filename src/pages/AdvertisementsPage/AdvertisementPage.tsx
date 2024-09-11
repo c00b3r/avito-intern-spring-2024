@@ -52,9 +52,6 @@ export default function AdvertisementPage() {
               name={currentAdvertisement.name}
               cost={Number(currentAdvertisement.price)}
               description={currentAdvertisement.description}
-              createdAt={currentAdvertisement.createdAt}
-              views={currentAdvertisement.views}
-              likes={currentAdvertisement.likes}
               handleCloseModal={handleCloseModal}
             />
           </Box>
