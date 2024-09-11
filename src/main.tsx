@@ -4,7 +4,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage/MainPage.tsx";
 import OrdersPage from "./pages/OrderPage/OrdersPage.tsx";
-import ListAdvertisementsPage from "./pages/ListAnnouncementsPage/ListAdvertisementsPage.tsx";
+import ListAdvertisementsPage from "./pages/ListAdvertisementsPage/ListAdvertisementsPage.tsx";
 import AdvertisementPage from "./pages/AnnouncementPage/AdvertisementPage.tsx";
 
 const route = createBrowserRouter([

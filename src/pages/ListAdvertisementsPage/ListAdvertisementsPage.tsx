@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Advertisment } from "../../interface";
-import { Button, Grid2 } from "@mui/material";
+import { Button, Grid2, MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
 import "./ListAdvertisementsPage.css";
 import ItemCard from "../../components/ItemCard/ItemCard";
+import AdvertisementForm from "../../components/ModalForms/AdvertisementForm";
 
 export default function ListAdvertisementsPage() {
   const [dataOfAdvertisements, setDataOfAdvertisements] = useState<Advertisment[]>([]);
@@ -11,10 +12,14 @@ export default function ListAdvertisementsPage() {
   const [startElement, setStartElement] = useState(0);
   const [valueSearchInput, setValueSearchInput] = useState("");
   const [searchParam, setSearchParam] = useState("");
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   // TODO: сделать поиск нормальным, &q= не работает
+  // вынести пагинацию в отдельный компонент
   const fetchDataOfAdvertisements = async (
     start: number = 0,
     limit: number = 0,
@@ -46,7 +51,9 @@ export default function ListAdvertisementsPage() {
     setPage(page - 1);
     setStartElement(startElement - limitOfAdvertisements);
   };
-  const onChangeLimitHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeLimitHandler = (
+    e: React.ChangeEvent<HTMLSelectElement> | SelectChangeEvent<number>,
+  ) => {
     setLimitOfAdvertisements(Number(e.target.value));
     setPage(1);
     setStartElement(0);
@@ -75,9 +82,17 @@ export default function ListAdvertisementsPage() {
   return (
     <div className="advertisements-container">
       <div className="search-container" style={{ display: "flex", gap: "5px", alignSelf: "end" }}>
-        <Button variant="contained" size="medium">
+        <Button variant="contained" size="medium" onClick={handleOpenModal}>
           Создать объявление
         </Button>
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <AdvertisementForm handleCloseModal={handleCloseModal} />
+        </Modal>
         <input
           type="text"
           placeholder="Поиск по объявлениям"
@@ -88,39 +103,47 @@ export default function ListAdvertisementsPage() {
       </div>
       <Grid2
         container
-        spacing={{ xs: 2, md: 3 }}
-        columnSpacing={{ xs: 3, sm: 3, md: 3 }}
+        spacing={{ xs: 1, md: 2 }}
+        columnSpacing={{ xs: 2, sm: 2, md: 2 }}
         margin={"10px"}
+        justifyContent={dataOfAdvertisements.length < 4 ? "center" : "flex-start"}
+        alignItems="stretch"
       >
         {dataOfAdvertisements.map((advertisementItem) => (
-          <Grid2 key={advertisementItem.id} size={{ xs: 1, sm: 1, md: 4 }}>
+          <Grid2
+            key={advertisementItem.id}
+            size={{ xs: 12, sm: 4, md: 4 }}
+            style={{ minWidth: "300px", maxWidth: "400px" }}
+          >
             <ItemCard {...advertisementItem} />
           </Grid2>
         ))}
       </Grid2>
 
       <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
-        <button disabled={page === 1} onClick={onClickButtonBack}>
+        <Button variant="outlined" size="small" disabled={page === 1} onClick={onClickButtonBack}>
           ←
-        </button>
+        </Button>
         <p>{page}</p>
-        <select
+        <Select
+          value={limitOfAdvertisements}
           name="selectCount"
           id="select"
           onChange={(e) => onChangeLimitHandler(e)}
-          value={limitOfAdvertisements}
         >
-          <option>10</option>
-          <option>20</option>
-          <option>30</option>
-          <option>40</option>
-        </select>
-        <button
+          <MenuItem value="10">10</MenuItem>
+          <MenuItem value="20">20</MenuItem>
+          <MenuItem value="30">30</MenuItem>
+          <MenuItem value="40">40</MenuItem>
+        </Select>
+        <Button
+          variant="outlined"
+          size="small"
           disabled={dataOfAdvertisements.length < limitOfAdvertisements}
           onClick={onClickButtonNext}
         >
           →
-        </button>
+        </Button>
       </div>
     </div>
   );
