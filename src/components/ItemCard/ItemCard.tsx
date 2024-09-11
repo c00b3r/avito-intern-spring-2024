@@ -42,7 +42,7 @@ export default function ItemCard({ name, price, views, likes, imageUrl, id }: It
       />
       <h3 style={{ margin: "8px 0", textAlign: "center" }}>{name}</h3>
       <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-        <p style={{ fontWeight: "bold" }}>{price}₽</p>
+        <p style={{ fontWeight: "bold", fontSize: "18px" }}>{price}₽</p>
         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
           <RemoveRedEye />
           <span>{views}</span>

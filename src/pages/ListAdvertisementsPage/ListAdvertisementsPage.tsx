@@ -3,7 +3,7 @@ import { Advertisment } from "../../interface";
 import { Button, Grid2, MenuItem, Modal, Select, SelectChangeEvent } from "@mui/material";
 import "./ListAdvertisementsPage.css";
 import ItemCard from "../../components/ItemCard/ItemCard";
-import AdvertisementForm from "../../components/ModalForms/AdvertisementForm";
+import AdvertisementForm from "../../components/ModalForms/AdvertisementCreateForm";
 
 export default function ListAdvertisementsPage() {
   const [dataOfAdvertisements, setDataOfAdvertisements] = useState<Advertisment[]>([]);
@@ -12,7 +12,7 @@ export default function ListAdvertisementsPage() {
   const [startElement, setStartElement] = useState(0);
   const [valueSearchInput, setValueSearchInput] = useState("");
   const [searchParam, setSearchParam] = useState("");
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const [loading, setLoading] = useState(false);

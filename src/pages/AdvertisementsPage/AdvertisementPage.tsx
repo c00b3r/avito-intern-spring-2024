@@ -1,10 +1,21 @@
 import { useLoaderData } from "react-router-dom";
 import { Advertisment } from "../../interface";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Modal, Typography } from "@mui/material";
+import { useState } from "react";
+import AdvertisementEditForm from "../../components/ModalForms/AdvertisementEditForm";
 
 export default function AdvertisementPage() {
   const currentAdvertisement = useLoaderData() as Advertisment;
-  console.log(currentAdvertisement);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const onClickEditHandler = () => {
+    handleOpenModal();
+  };
+
+  const onClickDeleteHandler = () => {};
+
   return (
     <Card
       sx={{
@@ -19,10 +30,22 @@ export default function AdvertisementPage() {
       }}
     >
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <Button variant="contained" size="medium">
+        <Button variant="contained" size="medium" onClick={onClickEditHandler}>
           Редактировать
         </Button>
-        <Button variant="contained" size="medium" color="error">
+        <Modal open={openModal} onClose={handleCloseModal}>
+          <Box>
+            <AdvertisementEditForm
+              id={currentAdvertisement.id}
+              image={currentAdvertisement.imageUrl}
+              name={currentAdvertisement.name}
+              cost={Number(currentAdvertisement.price)}
+              description={currentAdvertisement.description}
+              handleCloseModal={handleCloseModal}
+            />
+          </Box>
+        </Modal>
+        <Button variant="contained" size="medium" color="error" onClick={onClickDeleteHandler}>
           Удалить
         </Button>
       </Box>
