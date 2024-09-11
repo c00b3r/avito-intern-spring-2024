@@ -17,7 +17,7 @@ export default function ItemCard({ name, price, views, likes, imageUrl, id }: It
   return (
     <div
       style={{
-        border: "1px solid black",
+        border: "1px solid gray",
         borderRadius: "8px",
         padding: "16px",
         display: "flex",

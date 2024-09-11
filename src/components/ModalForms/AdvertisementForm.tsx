@@ -12,8 +12,21 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
     const [titleValue, setTitleValue] = useState("");
     const [descriptionValue, setDescriptionValue] = useState("");
     const [costValue, setCostValue] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const validateForm = () => {
+      if (!titleValue || !descriptionValue || costValue === null) {
+        return false;
+      }
+      return true;
+    };
 
     const onClickCreateButton = async () => {
+      if (!validateForm()) {
+        setError("Заполните все поля.");
+        return;
+      }
+
       try {
         const response = await fetch("http://localhost:3000/advertisements", {
           method: "POST",
@@ -36,9 +49,12 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           setDescriptionValue("");
           setCostValue(null);
           handleCloseModal();
+        } else {
+          setError("Ошибка при создании объявления");
         }
       } catch (error) {
         console.log(error);
+        setError("Ошибка сети.");
       }
     };
     return (
@@ -71,15 +87,16 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           Создать новое объявление
         </Typography>
         <TextField
-          id="filled-password-input"
+          id="filled-image-input"
           label="Изображение"
           variant="filled"
           size="small"
           defaultValue={imageValue}
           onChange={(e) => setImageValue(e.target.value)}
+          autoFocus
         />
         <TextField
-          id="filled-password-input"
+          id="filled-title-input"
           label="Название"
           variant="filled"
           size="small"
@@ -87,7 +104,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           onChange={(e) => setTitleValue(e.target.value)}
         />
         <TextField
-          id="filled-password-input"
+          id="filled-description-input"
           label="Описание"
           variant="filled"
           size="small"
@@ -95,13 +112,18 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           onChange={(e) => setDescriptionValue(e.target.value)}
         />
         <TextField
-          id="filled-password-input"
+          id="filled-cost-input"
           label="Стоимость"
           variant="filled"
           size="small"
           defaultValue={costValue}
           onChange={(e) => setCostValue(Number(e.target.value))}
         />
+        {error && (
+          <Typography color="error" alignSelf={"center"} fontWeight={"bold"}>
+            {error}
+          </Typography>
+        )}
         <Button variant="contained" size="small" onClick={onClickCreateButton}>
           Создать объявление
         </Button>
