@@ -5,7 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage/MainPage.tsx";
 import OrdersPage from "./pages/OrderPage/OrdersPage.tsx";
 import ListAdvertisementsPage from "./pages/ListAdvertisementsPage/ListAdvertisementsPage.tsx";
-import AdvertisementPage from "./pages/AnnouncementPage/AdvertisementPage.tsx";
+import AdvertisementPage from "./pages/AdvertisementsPage/AdvertisementPage.tsx";
+import { loader as loaderAdvetisement } from "./pages/AdvertisementsPage/advertisementLoader.ts";
 
 const route = createBrowserRouter([
   {
@@ -15,12 +16,11 @@ const route = createBrowserRouter([
       {
         path: "/advertisements",
         element: <ListAdvertisementsPage />,
-        children: [
-          {
-            path: "advertisements/:id",
-            element: <AdvertisementPage />,
-          },
-        ],
+      },
+      {
+        path: "/advertisements/:id",
+        element: <AdvertisementPage />,
+        loader: loaderAdvetisement,
       },
       {
         path: "/orders",

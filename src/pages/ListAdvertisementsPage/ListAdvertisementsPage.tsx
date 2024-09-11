@@ -85,12 +85,7 @@ export default function ListAdvertisementsPage() {
         <Button variant="contained" size="medium" onClick={handleOpenModal}>
           Создать объявление
         </Button>
-        <Modal
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+        <Modal open={openModal} onClose={handleCloseModal}>
           <AdvertisementForm handleCloseModal={handleCloseModal} />
         </Modal>
         <input

@@ -1,4 +1,5 @@
 import { FavoriteBorder, RemoveRedEye } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface ItemProps {
   id: string;
@@ -10,7 +11,9 @@ interface ItemProps {
   likes: number;
   imageUrl?: string;
 }
-export default function ItemCard({ name, price, views, likes, imageUrl }: ItemProps) {
+export default function ItemCard({ name, price, views, likes, imageUrl, id }: ItemProps) {
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -22,6 +25,9 @@ export default function ItemCard({ name, price, views, likes, imageUrl }: ItemPr
         alignItems: "center",
         gap: "12px",
         cursor: "pointer",
+      }}
+      onClick={() => {
+        navigate(`/advertisements/${id}`);
       }}
     >
       <img
