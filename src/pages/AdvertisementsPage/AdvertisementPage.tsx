@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { Advertisment } from "../../interface";
 import { Box, Button, Card, CardContent, Modal, Typography } from "@mui/material";
 import { useState } from "react";
@@ -9,12 +9,23 @@ export default function AdvertisementPage() {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const navigate = useNavigate();
 
   const onClickEditHandler = () => {
     handleOpenModal();
   };
 
-  const onClickDeleteHandler = () => {};
+  const onClickDeleteHandler = async () => {
+    const response = await fetch(
+      `http://localhost:3000/advertisements/${currentAdvertisement.id}`,
+      {
+        method: "DELETE",
+      },
+    );
+    if (response.ok) {
+      navigate("/advertisements");
+    }
+  };
 
   return (
     <Card
@@ -41,6 +52,9 @@ export default function AdvertisementPage() {
               name={currentAdvertisement.name}
               cost={Number(currentAdvertisement.price)}
               description={currentAdvertisement.description}
+              createdAt={currentAdvertisement.createdAt}
+              views={currentAdvertisement.views}
+              likes={currentAdvertisement.likes}
               handleCloseModal={handleCloseModal}
             />
           </Box>

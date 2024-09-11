@@ -9,13 +9,16 @@ interface AdvertisementEditFormProps {
   name: string;
   cost: number;
   description: string | undefined;
+  createdAt: string;
+  views: number;
+  likes: number;
   handleCloseModal: () => void;
 }
 
 //TODO: дублирование кода, объединить две формы в одну
 
 const AdvertisementEditForm = forwardRef<HTMLDivElement, AdvertisementEditFormProps>(
-  ({ id, image, name, cost, description, handleCloseModal }, ref) => {
+  ({ id, image, name, cost, description, createdAt, views, likes, handleCloseModal }, ref) => {
     const [imageValue, setImageValue] = useState(image);
     const [titleValue, setTitleValue] = useState(name);
     const [descriptionValue, setDescriptionValue] = useState(description);
@@ -41,8 +44,12 @@ const AdvertisementEditForm = forwardRef<HTMLDivElement, AdvertisementEditFormPr
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            id: id,
             name: titleValue,
             price: costValue,
+            createdAt: createdAt,
+            views: views,
+            likes: likes,
             imageUrl: imageValue,
             description: descriptionValue,
           }),
