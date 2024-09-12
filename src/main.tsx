@@ -7,6 +7,7 @@ import OrdersPage from "./pages/OrderPage/OrdersPage.tsx";
 import ListAdvertisementsPage from "./pages/ListAdvertisementsPage/ListAdvertisementsPage.tsx";
 import AdvertisementPage from "./pages/AdvertisementsPage/AdvertisementPage.tsx";
 import { loader as loaderAdvetisement } from "./pages/AdvertisementsPage/advertisementLoader.ts";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
 
 const route = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const route = createBrowserRouter([
       {
         path: "/orders",
         element: <OrdersPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

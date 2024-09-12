@@ -4,6 +4,7 @@ import { Button, Grid2, MenuItem, Modal, Select, SelectChangeEvent } from "@mui/
 import "./ListAdvertisementsPage.css";
 import ItemCard from "../../components/ItemCard/ItemCard";
 import AdvertisementForm from "../../components/ModalForms/AdvertisementCreateForm";
+import Pagination from "../../components/Pagination/Pagination";
 
 export default function ListAdvertisementsPage() {
   const [allDataOfAdvertisements, setAllDataOfAdvertisements] = useState<Advertisment[]>([]);
@@ -142,32 +143,14 @@ export default function ListAdvertisementsPage() {
           ))}
         </Grid2>
       )}
-
-      <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
-        <Button variant="outlined" size="small" disabled={page === 1} onClick={onClickButtonBack}>
-          ←
-        </Button>
-        <p>{page}</p>
-        <Select
-          value={limitOfAdvertisements}
-          name="selectCount"
-          id="select"
-          onChange={(e) => onChangeLimitHandler(e)}
-        >
-          <MenuItem value="10">10</MenuItem>
-          <MenuItem value="20">20</MenuItem>
-          <MenuItem value="30">30</MenuItem>
-          <MenuItem value="40">40</MenuItem>
-        </Select>
-        <Button
-          variant="outlined"
-          size="small"
-          disabled={dataOfAdvertisements.length < limitOfAdvertisements}
-          onClick={onClickButtonNext}
-        >
-          →
-        </Button>
-      </div>
+      <Pagination
+        page={page}
+        limit={limitOfAdvertisements}
+        onClickButtonBack={onClickButtonBack}
+        onClickButtonNext={onClickButtonNext}
+        onChangeLimitHandler={onChangeLimitHandler}
+        totalItems={allDataOfAdvertisements.length}
+      />
     </div>
   );
 }

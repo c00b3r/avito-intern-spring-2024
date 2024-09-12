@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Order } from "../../interface";
-import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import OrderCard from "../../components/OrderCard/OrderCard";
+import Pagination from "../../components/Pagination/Pagination";
 
 export default function OrdersPage() {
   const [dataOrders, setDataOrders] = useState<Order[]>([]);
@@ -11,6 +12,22 @@ export default function OrdersPage() {
   const [sortPriceAscending, setSortPriceAscending] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleLimitChange = (
+    e: React.ChangeEvent<HTMLSelectElement> | SelectChangeEvent<number>,
+  ) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
+
+  const startIndex = (page - 1) * limit;
+  const paginatedOrders = dataOrders.slice(startIndex, startIndex + limit);
 
   useEffect(() => {
     const getOrders = async (statusOrder: number | "") => {
@@ -52,16 +69,24 @@ export default function OrdersPage() {
           Ваши заказы
         </Typography>
         <Grid2 container spacing={2}>
-          {dataOrders.length === 0 ? (
+          {paginatedOrders.length === 0 ? (
             <p>Нет заказов</p>
           ) : (
-            dataOrders.map((order) => (
+            paginatedOrders.map((order) => (
               <Grid item xs={12} sm={6} md={4} key={order.id}>
                 <OrderCard order={order} />
               </Grid>
             ))
           )}
         </Grid2>
+        <Pagination
+          page={page}
+          limit={limit}
+          onClickButtonBack={() => handlePageChange(page - 1)}
+          onClickButtonNext={() => handlePageChange(page + 1)}
+          onChangeLimitHandler={handleLimitChange}
+          totalItems={dataOrders.length}
+        />
       </Box>
       <Box
         sx={{
