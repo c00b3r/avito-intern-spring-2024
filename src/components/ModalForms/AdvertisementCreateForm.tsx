@@ -11,7 +11,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
     const [imageValue, setImageValue] = useState("");
     const [titleValue, setTitleValue] = useState("");
     const [descriptionValue, setDescriptionValue] = useState("");
-    const [costValue, setCostValue] = useState<number | null>(null);
+    const [costValue, setCostValue] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
 
     const validateForm = () => {
@@ -47,7 +47,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           setImageValue("");
           setTitleValue("");
           setDescriptionValue("");
-          setCostValue(null);
+          setCostValue("");
           handleCloseModal();
         } else {
           setError("Ошибка при создании объявления");
@@ -91,7 +91,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           label="Изображение"
           variant="filled"
           size="small"
-          defaultValue={imageValue}
+          value={imageValue}
           onChange={(e) => setImageValue(e.target.value)}
           autoFocus
         />
@@ -100,7 +100,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           label="Название"
           variant="filled"
           size="small"
-          defaultValue={titleValue}
+          value={titleValue}
           onChange={(e) => setTitleValue(e.target.value)}
         />
         <TextField
@@ -108,7 +108,7 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           label="Описание"
           variant="filled"
           size="small"
-          defaultValue={descriptionValue}
+          value={descriptionValue}
           onChange={(e) => setDescriptionValue(e.target.value)}
         />
         <TextField
@@ -116,8 +116,8 @@ const AdvertisementForm = forwardRef<HTMLDivElement, AdvertisementFormProps>(
           label="Стоимость"
           variant="filled"
           size="small"
-          defaultValue={costValue}
-          onChange={(e) => setCostValue(Number(e.target.value))}
+          value={costValue}
+          onChange={(e) => setCostValue(e.target.value)}
         />
         {error && (
           <Typography color="error" alignSelf={"center"} fontWeight={"bold"}>
