@@ -6,10 +6,10 @@ import ItemCard from "../../components/ItemCard/ItemCard";
 import AdvertisementForm from "../../components/ModalForms/AdvertisementCreateForm";
 
 export default function ListAdvertisementsPage() {
+  const [allDataOfAdvertisements, setAllDataOfAdvertisements] = useState<Advertisment[]>([]);
   const [dataOfAdvertisements, setDataOfAdvertisements] = useState<Advertisment[]>([]);
   const [page, setPage] = useState(1);
   const [limitOfAdvertisements, setLimitOfAdvertisements] = useState(10);
-  const [startElement, setStartElement] = useState(0);
   const [valueSearchInput, setValueSearchInput] = useState("");
   const [searchParam, setSearchParam] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -20,20 +20,14 @@ export default function ListAdvertisementsPage() {
 
   // TODO: сделать поиск нормальным, &q= не работает
   // вынести пагинацию в отдельный компонент
-  const fetchDataOfAdvertisements = async (
-    start: number = 0,
-    limit: number = 0,
-    name: string = "",
-  ) => {
+  const fetchDataOfAdvertisements = async () => {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `http://localhost:3000/advertisements?_start=${start}&_limit=${limit}&name=${name}`,
-      );
+      const response = await fetch(`http://localhost:3000/advertisements`);
       if (response.ok) {
         const data: Advertisment[] = await response.json();
-        setDataOfAdvertisements(data);
+        setAllDataOfAdvertisements(data);
         setLoading(false);
       }
     } catch (error) {
@@ -45,31 +39,44 @@ export default function ListAdvertisementsPage() {
 
   const onClickButtonNext = () => {
     setPage(page + 1);
-    setStartElement(startElement + limitOfAdvertisements);
   };
   const onClickButtonBack = () => {
     setPage(page - 1);
-    setStartElement(startElement - limitOfAdvertisements);
   };
   const onChangeLimitHandler = (
     e: React.ChangeEvent<HTMLSelectElement> | SelectChangeEvent<number>,
   ) => {
     setLimitOfAdvertisements(Number(e.target.value));
     setPage(1);
-    setStartElement(0);
   };
   const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueSearchInput(e.target.value);
   };
   const onClickSearchHandler = () => {
     setSearchParam(valueSearchInput);
-    setStartElement(0);
-    fetchDataOfAdvertisements(0, limitOfAdvertisements, valueSearchInput);
+    setPage(1);
   };
 
   useEffect(() => {
-    fetchDataOfAdvertisements(startElement, limitOfAdvertisements, searchParam);
-  }, [page, startElement, limitOfAdvertisements, searchParam]);
+    fetchDataOfAdvertisements();
+  }, []);
+
+  useEffect(() => {
+    const filterAndPaginateData = () => {
+      let filtered = allDataOfAdvertisements;
+
+      if (searchParam) {
+        const regex = new RegExp(searchParam.trim(), "i");
+        filtered = filtered.filter((advertisement) => regex.test(advertisement.name));
+      }
+
+      const startIndex = (page - 1) * limitOfAdvertisements;
+      const paginated = filtered.slice(startIndex, startIndex + limitOfAdvertisements);
+
+      setDataOfAdvertisements(paginated);
+    };
+    filterAndPaginateData();
+  }, [page, limitOfAdvertisements, searchParam, allDataOfAdvertisements]);
 
   if (loading) {
     return <p>Загрузка данных...</p>;
