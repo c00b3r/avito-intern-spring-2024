@@ -7,6 +7,8 @@ import OrderCard from "../../components/OrderCard/OrderCard";
 export default function OrdersPage() {
   const [dataOrders, setDataOrders] = useState<Order[]>([]);
   const [status, setStatus] = useState<"" | number>("");
+  const [sortPriceDescending, setSortPriceDescending] = useState(false);
+  const [sortPriceAscending, setSortPriceAscending] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -17,7 +19,14 @@ export default function OrdersPage() {
         const response = await fetch(`http://localhost:3000/orders?status=${statusOrder}`);
         if (response.ok) {
           const data: Order[] = await response.json();
-          setDataOrders(data);
+          let sortedData = data;
+          if (sortPriceDescending) {
+            sortedData = data.sort((a, b) => b.total - a.total);
+          }
+          if (sortPriceAscending) {
+            sortedData = data.sort((a, b) => a.total - b.total);
+          }
+          setDataOrders(sortedData);
           setLoading(false);
         }
       } catch (error) {
@@ -27,7 +36,7 @@ export default function OrdersPage() {
       }
     };
     getOrders(status);
-  }, [status]);
+  }, [sortPriceAscending, sortPriceDescending, status]);
 
   if (loading) {
     return <p>Загрузка заказов...</p>;
@@ -95,6 +104,26 @@ export default function OrdersPage() {
           sx={{ alignSelf: "center", marginTop: "16px" }}
         >
           Сбросить фильтры
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setSortPriceDescending(!sortPriceDescending);
+          }}
+          sx={{ alignSelf: "center", marginTop: "16px" }}
+        >
+          Сортировать по сумме (по убыванию)
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setSortPriceAscending(!sortPriceAscending);
+          }}
+          sx={{ alignSelf: "center", marginTop: "16px" }}
+        >
+          Сортировать по сумме (по возрастанию)
         </Button>
       </Box>
     </Box>

@@ -23,6 +23,7 @@ const OrderStatus = {
 type OrderItem = Advertisment & { count: number };
 
 export type Order = {
+  price: any;
   id: string;
   status: (typeof OrderStatus)[keyof typeof OrderStatus];
   createdAt: string;
