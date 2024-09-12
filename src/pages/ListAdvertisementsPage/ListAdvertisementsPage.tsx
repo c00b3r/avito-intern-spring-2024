@@ -96,24 +96,28 @@ export default function ListAdvertisementsPage() {
         />
         <Button onClick={onClickSearchHandler}>Поиск </Button>
       </div>
-      <Grid2
-        container
-        spacing={{ xs: 1, md: 2 }}
-        columnSpacing={{ xs: 2, sm: 2, md: 2 }}
-        margin={"10px"}
-        justifyContent={dataOfAdvertisements.length < 4 ? "center" : "flex-start"}
-        alignItems="stretch"
-      >
-        {dataOfAdvertisements.map((advertisementItem) => (
-          <Grid2
-            key={advertisementItem.id}
-            size={{ xs: 12, sm: 4, md: 4 }}
-            style={{ minWidth: "300px", maxWidth: "400px" }}
-          >
-            <ItemCard {...advertisementItem} />
-          </Grid2>
-        ))}
-      </Grid2>
+      {dataOfAdvertisements.length === 0 ? (
+        <p>Нет заказов</p>
+      ) : (
+        <Grid2
+          container
+          spacing={{ xs: 1, md: 2 }}
+          columnSpacing={{ xs: 2, sm: 2, md: 2 }}
+          margin={"10px"}
+          justifyContent={dataOfAdvertisements.length < 4 ? "center" : "flex-start"}
+          alignItems="stretch"
+        >
+          {dataOfAdvertisements.map((advertisementItem) => (
+            <Grid2
+              key={advertisementItem.id}
+              size={{ xs: 12, sm: 4, md: 4 }}
+              style={{ minWidth: "300px", maxWidth: "400px" }}
+            >
+              <ItemCard {...advertisementItem} />
+            </Grid2>
+          ))}
+        </Grid2>
+      )}
 
       <div style={{ display: "flex", flexDirection: "row", gap: "15px" }}>
         <Button variant="outlined" size="small" disabled={page === 1} onClick={onClickButtonBack}>
