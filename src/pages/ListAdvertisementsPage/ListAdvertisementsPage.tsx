@@ -12,14 +12,14 @@ export default function ListAdvertisementsPage() {
   const [limitOfAdvertisements, setLimitOfAdvertisements] = useState(10);
   const [valueSearchInput, setValueSearchInput] = useState("");
   const [searchParam, setSearchParam] = useState("");
+  const [sortOrder, setSortOrder] = useState("none");
+  const [originalData, setOriginalData] = useState<Advertisment[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  // TODO: сделать поиск нормальным, &q= не работает
-  // вынести пагинацию в отдельный компонент
   const fetchDataOfAdvertisements = async () => {
     try {
       setLoading(true);
@@ -28,6 +28,7 @@ export default function ListAdvertisementsPage() {
       if (response.ok) {
         const data: Advertisment[] = await response.json();
         setAllDataOfAdvertisements(data);
+        setOriginalData(data);
         setLoading(false);
       }
     } catch (error) {
@@ -56,6 +57,10 @@ export default function ListAdvertisementsPage() {
     setSearchParam(valueSearchInput);
     setPage(1);
   };
+  const onChangeSortOrder = (e: SelectChangeEvent<string>) => {
+    setSortOrder(e.target.value);
+    setPage(1);
+  };
 
   useEffect(() => {
     fetchDataOfAdvertisements();
@@ -70,13 +75,20 @@ export default function ListAdvertisementsPage() {
         filtered = filtered.filter((advertisement) => regex.test(advertisement.name));
       }
 
+      if (sortOrder === "price") {
+        filtered = filtered.sort((a, b) => a.price - b.price);
+      } else if (sortOrder === "likes") {
+        filtered = filtered.sort((a, b) => b.likes - a.likes);
+      } else if (sortOrder === "views") {
+        filtered = filtered.sort((a, b) => b.views - a.views);
+      }
       const startIndex = (page - 1) * limitOfAdvertisements;
       const paginated = filtered.slice(startIndex, startIndex + limitOfAdvertisements);
 
       setDataOfAdvertisements(paginated);
     };
     filterAndPaginateData();
-  }, [page, limitOfAdvertisements, searchParam, allDataOfAdvertisements]);
+  }, [page, limitOfAdvertisements, searchParam, allDataOfAdvertisements, sortOrder, originalData]);
 
   if (loading) {
     return <p>Загрузка данных...</p>;
@@ -89,12 +101,17 @@ export default function ListAdvertisementsPage() {
   return (
     <div className="advertisements-container">
       <div className="search-container" style={{ display: "flex", gap: "5px", alignSelf: "end" }}>
-        <Button variant="contained" size="medium" onClick={handleOpenModal}>
+        <Button variant="contained" size="small" onClick={handleOpenModal}>
           Создать объявление
         </Button>
         <Modal open={openModal} onClose={handleCloseModal}>
           <AdvertisementForm handleCloseModal={handleCloseModal} />
         </Modal>
+        <Select value={sortOrder} onChange={onChangeSortOrder} displayEmpty size="small">
+          <MenuItem value="price">По цене</MenuItem>
+          <MenuItem value="likes">По лайкам</MenuItem>
+          <MenuItem value="views">По просмотрам</MenuItem>
+        </Select>
         <input
           type="text"
           placeholder="Поиск по объявлениям"
